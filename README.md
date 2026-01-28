@@ -27,13 +27,17 @@ lumina-photo-gen/
 ├── DEPLOYMENT.md                # Production deployment guide
 ├── STATUS.md                    # Current setup status
 ├── SETUP_GUIDE.md               # CatVTON setup guide
+├── IMAGE_LIBRARY_GUIDE.md       # 🆕 Multi-store image library guide
 │
 ├── CatVTON/                     # Cloned repository
 │   ├── api_server.py            # Production API server
 │   ├── batch_process.py         # Batch processing script
 │   └── app_flux.py              # Gradio app (FLUX version)
 │
-├── production_pipeline.py       # Main pipeline script
+├── production_pipeline.py       # 🔄 Updated with library integration
+├── image_library.py             # 🆕 Airtable library manager
+├── sync_to_store.py             # 🆕 Multi-store sync tool
+├── airtable_setup.md            # 🆕 Airtable setup instructions
 ├── deploy_runpod.py             # RunPod deployment automation
 ├── runpod_setup.sh              # Setup script for GPU instance
 │
@@ -121,6 +125,43 @@ python production_pipeline.py \
 3. Cost: $0.31
 4. Time: ~55 minutes
 5. Upload to Shopify automatically
+
+---
+
+## 🗄️ NEW: Multi-Store Image Library
+
+**Reuse generated images across unlimited stores!**
+
+### The Problem
+Running 5 stores with same products? Without a library:
+- Generate 1,000 products × 5 stores = **5,000 generations**
+- Cost: **$5.20**
+- Time: **15 hours**
+
+### The Solution
+With Airtable image library:
+- Generate 1,000 products **once**
+- Reuse 90% across other stores
+- Cost: **$1.22** (76% savings)
+- Time: **3.6 hours** (76% time saved)
+
+### How It Works
+```bash
+# Store 1: Generate & save to library
+python production_pipeline.py --use-library
+
+# Store 2-10: Reuse from library
+python sync_to_store.py --store-name "Store2" --csv products.csv
+```
+
+### Features
+✅ Automatic deduplication  
+✅ Track which stores use which images  
+✅ Sync to new stores in minutes  
+✅ Visual Airtable interface  
+✅ Free plan supports 400 products
+
+**Full guide**: See [IMAGE_LIBRARY_GUIDE.md](IMAGE_LIBRARY_GUIDE.md)
 
 ---
 

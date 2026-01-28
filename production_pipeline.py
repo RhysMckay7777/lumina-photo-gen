@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Production Pipeline for AI Product Photo Generation
-Integrates with dropship-automate scraper
+Integrates with dropship-automate scraper + Airtable image library
 """
 
 import os
@@ -14,6 +14,7 @@ from typing import List, Dict
 from dataclasses import dataclass
 from tqdm import tqdm
 import logging
+from image_library import ImageLibrary
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,12 +47,18 @@ class CatVTONPipeline:
         self,
         catvton_url: str,
         model_photos_dir: str,
-        output_dir: str
+        output_dir: str,
+        use_library: bool = True
     ):
         self.catvton_url = catvton_url.rstrip('/')
         self.model_photos_dir = Path(model_photos_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True, parents=True)
+        
+        # Initialize image library (optional)
+        self.library = ImageLibrary() if use_library else None
+        if self.library:
+            logger.info("✅ Connected to image library")
         
         # Load model photos
         self.model_photos = self._load_model_photos()
@@ -90,7 +97,8 @@ class CatVTONPipeline:
         self,
         product: Product,
         model_photo: ModelPhoto,
-        output_name: str = None
+        output_name: str = None,
+        check_library: bool = True
     ) -> Dict:
         """Generate single try-on image"""
         
@@ -99,7 +107,19 @@ class CatVTONPipeline:
         
         output_path = self.output_dir / output_name
         
-        # Skip if already exists
+        # Check library first (if enabled)
+        if check_library and self.library:
+            if self.library.has_images(product.id):
+                logger.info(f"♻️  Found existing images for {product.id} in library")
+                # Get images from library instead of generating
+                existing_images = self.library.get_images(product.id)
+                return {
+                    "status": "reused_from_library",
+                    "output_path": str(output_path),
+                    "library_images": existing_images
+                }
+        
+        # Skip if already exists locally
         if output_path.exists():
             logger.info(f"⏭️  Skipping {output_name} (already exists)")
             return {
@@ -131,6 +151,15 @@ class CatVTONPipeline:
                 with open(output_path, 'wb') as f:
                     f.write(image_data)
                 
+                # Save to library if enabled
+                if self.library:
+                    self.library.save_product(
+                        cj_product_id=product.id,
+                        product_name=product.name,
+                        category=product.category,
+                        original_image_url=product.image_url
+                    )
+                
                 return {
                     "status": "success",
                     "output_path": str(output_path),
@@ -149,22 +178,51 @@ class CatVTONPipeline:
     def generate_product_variants(
         self,
         product: Product,
-        num_variants: int = 3
+        num_variants: int = 3,
+        check_library: bool = True
     ) -> List[Dict]:
         """Generate multiple variants of a product with different models"""
         
+        # Check library first
+        if check_library and self.library and self.library.has_images(product.id):
+            logger.info(f"♻️  Reusing existing images for {product.id}")
+            existing_images = self.library.get_images(product.id)
+            return [{
+                "status": "reused_from_library",
+                "variant": idx + 1,
+                "library_image": img
+            } for idx, img in enumerate(existing_images)]
+        
         results = []
+        generated_paths = []
+        model_names = []
         
         # Select diverse models
         selected_models = self.model_photos[:num_variants]
         
         for idx, model_photo in enumerate(selected_models):
+            output_name = f"{product.id}_variant{idx+1}.jpg"
             result = self.generate_single(
                 product=product,
                 model_photo=model_photo,
-                output_name=f"{product.id}_variant{idx+1}.jpg"
+                output_name=output_name,
+                check_library=False  # Already checked above
             )
             results.append(result)
+            
+            if result["status"] == "success":
+                generated_paths.append(result["output_path"])
+                model_names.append(model_photo.id)
+        
+        # Save all variants to library
+        if generated_paths and self.library:
+            self.library.save_images(
+                cj_product_id=product.id,
+                image_paths=generated_paths,
+                model_photos=model_names,
+                generation_method="CatVTON"
+            )
+            logger.info(f"💾 Saved {len(generated_paths)} images to library for {product.id}")
         
         return results
     
@@ -258,6 +316,17 @@ def main():
         default=3,
         help="Number of variants per product"
     )
+    parser.add_argument(
+        "--use-library",
+        action="store_true",
+        default=True,
+        help="Use Airtable image library (default: True)"
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip products that already have images in library"
+    )
     
     args = parser.parse_args()
     
@@ -270,7 +339,8 @@ def main():
     pipeline = CatVTONPipeline(
         catvton_url=args.catvton_url,
         model_photos_dir=str(model_photos),
-        output_dir=str(output_dir)
+        output_dir=str(output_dir),
+        use_library=args.use_library
     )
     
     # Process products
