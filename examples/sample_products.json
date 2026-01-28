@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": "dress_001",
+      "image_url": "https://ae01.alicdn.com/kf/S8f5c4a7e8b9e4c8e9f5e4c8e9f5e4c8e/Women-s-Casual-Midi-Dress-Summer-Short-Sleeve.jpg",
+      "title": "Women's Casual Midi Dress Summer Short Sleeve",
+      "category": "dresses",
+      "source": "aliexpress",
+      "price": 24.99
+    },
+    {
+      "id": "top_001",
+      "image_url": "https://ae01.alicdn.com/kf/S7d4b3a6e7a8d4b3a6e7a8d4b3a6e7a8/Women-s-Blouse-Plus-Size-Casual-Top.jpg",
+      "title": "Women's Blouse Plus Size Casual Top",
+      "category": "tops",
+      "source": "aliexpress",
+      "price": 15.99
+    },
+    {
+      "id": "outerwear_001",
+      "image_url": "https://ae01.alicdn.com/kf/S6c5b2a5e6a7c5b2a5e6a7c5b2a5e6a7/Winter-Coat-Women-Long-Warm-Jacket.jpg",
+      "title": "Winter Coat Women Long Warm Jacket",
+      "category": "outerwear",
+      "source": "aliexpress",
+      "price": 45.99
+    }
+  ]
+}

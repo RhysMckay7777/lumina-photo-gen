@@ -1,0 +1,1 @@
+Completed research and built AI Product Photo Generator for dropshipping. See files in ~/lumina-photo-gen/. Recommending Fashn.ai API based on quality, commercial license, and ease of use. CatVTON is a budget option, but commercial licensing is required. Check PROJECT_SUMMARY.md for an overview.
