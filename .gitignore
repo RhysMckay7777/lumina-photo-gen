@@ -1,11 +1,17 @@
+# Credentials
 .env
+*.log
 *.pyc
 __pycache__/
+
+# Test outputs
+/tmp/
+*.png
+*.jpg
+
+# Config files with tokens
+config.json
+.credentials
+
+# OS
 .DS_Store
-output/
-*.log
-venv/
-.venv/
-dist/
-build/
-*.egg-info/

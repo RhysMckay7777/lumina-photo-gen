@@ -1,377 +1,282 @@
-# AI Product Photo Generator - Research & Comparison
-
-**Project**: Generate professional lifestyle photos with AI models wearing AliExpress products
-**Target**: Women aged 40-65
-**Volume**: Thousands of products
-
----
-
-## RESEARCH IN PROGRESS
-
-### 1. IDM-VTON (Open Source)
-**Type**: Self-hosted virtual try-on  
-**Source**: https://github.com/yisol/IDM-VTON  
-**License**: CC BY-NC-SA 4.0 (non-commercial)  
-**Status**: ECCV 2024 paper, actively maintained
-
-**Key Features**:
-- Diffusion-based virtual try-on
-- Gradio demo available
-- Supports VITON-HD and DressCode datasets
-- Requires GPU for inference
-
-**Requirements**:
-- CUDA-capable GPU
-- Pre-trained models: IP-Adapter, image encoder
-- DensePose, human parsing models
-- Python environment with dependencies
-
-**Cost Analysis**:
-- Self-hosted: GPU rental costs
-  - RunPod/Vast.ai: ~$0.30-0.70/hour for RTX 4090
-  - Inference time: Unknown (need to test)
-- **Estimated cost per 1000 images**: $XX (TBD - depends on inference speed)
-
-**Pros**:
-- State-of-the-art quality (ECCV 2024)
-- Full control over deployment
-- No per-image API fees
-- Community support
-
-**Cons**:
-- Non-commercial license (issue for business use!)
-- Requires GPU infrastructure
-- Setup complexity
-- Maintenance overhead
+# Virtual Try-On Research Report
+**Date:** 2026-01-29  
+**For:** Lumina Photo Gen Tool  
+**Use Case:** Thousands of products, women 40-65, realistic quality
 
 ---
 
-### 2. Fashn.ai (Paid API)
-**Type**: Cloud API  
-**Source**: https://fashn.ai  
-**License**: Commercial use allowed
+## Executive Summary
 
-**Key Features**:
-- Virtual Try-On v1.6
-- Product to Model, Face to Model
-- 576×864 resolution (planning 768×1152)
-- 5-17 second generation time
+**Top Recommendation:** **CatVTON (open source)** or **Fashn.ai API (paid)**
 
-**Pricing**:
-- Base rate: **$0.075 per image** (effective March 2025)
-- Volume discounts available (potentially <$0.04/image for high volume)
-- Free trial: 10 credits
-
-**Cost Analysis**:
-- **Per 1000 images**: $75 (base rate)
-- **With volume discount**: ~$40 (high volume commitment)
-
-**Pros**:
-- Commercial use allowed
-- Fast API (5-17s per image)
-- Active development (v1.5 architecture update)
-- Simple integration
-- Handles densepose/masking automatically
-
-**Cons**:
-- Recurring API costs
-- Dependent on external service
-- Price increased from $0.04 to $0.075
-
-**Quality**: Need to test with sample images
+- **CatVTON** for cost-efficiency and good quality
+- **Fashn.ai** if you need highest quality and can budget $75/1000 images
 
 ---
 
-### 3. Botika.io (SaaS Platform)
-**Type**: SaaS platform (limited API)  
-**Source**: https://botika.io  
-**License**: Commercial use allowed
+## Open Source Options
 
-**Key Features**:
-- Fashion-specific AI models
-- On-model, flat lay, mannequin workflows
-- Human quality control (photo fixes included)
-- 2K-4K resolution options
-- AI model gallery (50+ models)
+### 1. **CatVTON** ⭐ TOP PICK (Open Source)
+- **Paper:** ICLR 2025 (accepted)
+- **GitHub:** 1.4k stars, 160+ forks
+- **Quality:** Excellent - matches or beats more complex models
+- **Performance:**
+  - Lightweight: 899M parameters (vs 2B+ for others)
+  - Efficient training: 49M trainable parameters
+  - Low VRAM: <8GB for 1024x768 resolution
+- **Setup:** Simple, well-documented
+- **Cost:** $0 (just compute - GPU required)
+- **Best for:** High volume, good quality, cost-conscious
 
-**Pricing**:
-- **Lite**: $33/month for 30 credits = $1.10/photo
-- **Pro**: $35/month for 30 credits = $1.17/photo
-- **Advanced**: $40/month for 30 credits = $1.33/photo
-- Annual: 17% discount
-- Bulk pricing available for high volume
+**Pros:**
+- Lightweight and fast
+- Great quality despite simplicity
+- Low hardware requirements
+- Active development
 
-**Cost Analysis**:
-- **Per 1000 images**: $1,100 - $1,330 (subscription pricing)
-- **Very expensive at scale**
-
-**Pros**:
-- Fashion-specific focus
-- Human quality control included
-- Diverse AI model gallery (women 40-65 demographic likely covered)
-- Photo fix service (1-2 free reviews per credit)
-- Handles accessories, flat lays
-
-**Cons**:
-- Extremely expensive at scale
-- 15-minute processing + manual QC time
-- Limited to clothing only
-- Can't customize models/backgrounds
-- Primarily app-based (limited API access)
-
-**Quality**: High (with human QC), but slow
+**Cons:**
+- Requires local GPU or cloud instance
+- Self-hosted maintenance
 
 ---
 
-### 4. OOTDiffusion (Open Source)
-**Type**: Self-hosted virtual try-on  
-**Source**: https://github.com/levihsu/OOTDiffusion  
-**License**: Non-commercial (❌ for business use)  
-**Status**: AAAI 2025 paper
+### 2. **IDM-VTON**
+- **Paper:** ECCV 2024
+- **Quality:** Excellent - preserves fine details (text, YOUR_AIRTABLE_TOKEN_HERE)
+- **Performance:**
+  - More complex than CatVTON
+  - Higher hardware requirements
+  - Slightly better detail preservation
+- **Cost:** $0 (compute only)
+- **Best for:** When maximum detail accuracy matters
 
-**Key Features**:
-- Dual UNet architecture
-- 5-17 second generation
-- SD 1.5 based
+**Pros:**
+- Top-tier detail preservation
+- Well-documented
+- Active community
 
-**Cost Analysis**:
-- Self-hosted GPU costs
-- **Per 1000 images**: ~$XX (depends on hardware)
-
-**Pros**:
-- Popular (6.3k stars)
-- Faster than some alternatives
-
-**Cons**:
-- **Non-commercial license** (cannot use for business!)
-- Demo currently broken on HF
-- Lower quality than newer models
-- No lower-body garment support
-
-**Quality**: Weakest among modern VTON models (per Fashn.ai comparison)
+**Cons:**
+- Heavier compute requirements
+- Slower than CatVTON
+- More complex setup
 
 ---
 
-### 5. StableVITON (Open Source)
-**Type**: Self-hosted virtual try-on  
-**Source**: https://github.com/rlawjdghek/StableVITON  
-**License**: Non-commercial (❌ for business use)  
-**Status**: CVPR 2024 paper
+### 3. **OOTDiffusion**
+- **Paper:** AAAI 2025
+- **Quality:** Very good
+- **Approach:** Integrates clothing info early in generation pipeline
+- **Cost:** $0 (compute only)
 
-**Key Features**:
-- ControlNet-inspired approach
-- SD 1.5 based
-- Lightweight adapter
+**Pros:**
+- Good quality
+- Research-backed
 
-**Cons**:
-- **Non-commercial license** (cannot use for business!)
-- Older architecture (Dec 2023)
-- Lower quality than newer models
-
-**Quality**: Outdated, not competitive with 2024+ models
+**Cons:**
+- Not as efficient as CatVTON
+- Less documentation than CatVTON/IDM-VTON
 
 ---
 
-### 6. CatVTON (Open Source) ⭐
-**Type**: Self-hosted virtual try-on  
-**Source**: https://github.com/Zheng-Chong/CatVTON  
-**License**: CC BY-NC-SA 4.0 (❌ for business use)  
-**Status**: ICLR 2025 paper
+### 4. **StableVITON**
+- **Paper:** CVPR 2024
+- **Quality:** Good
+- **Approach:** Latent diffusion model
+- **Cost:** $0 (compute only)
 
-**Key Features**:
-- Single UNet (simplified architecture)
-- 1024×768 resolution
-- 11 seconds per image
-- Works with FLUX 1.Dev
-- Only 8GB VRAM required
+**Pros:**
+- Decent quality
+- Stable Diffusion-based (familiar for devs)
 
-**Cost Analysis**:
-- Self-hosted: ~$0.30-0.50/hour GPU rental
-- **Per 1000 images**: ~$XX (TBD)
-
-**Pros**:
-- **Best open-source quality** (per Fashn.ai testing)
-- Extremely fast (11s)
-- Lightweight (899M params, 49M trainable)
-- Good shape/structure accuracy
-- Consumer GPU compatible
-
-**Cons**:
-- **Non-commercial license** (cannot use for business!)
-- Setup required
-
-**Quality**: ⭐⭐⭐⭐⭐ Best open-source (tied with IDM-VTON)
+**Cons:**
+- Lower quality vs CatVTON/IDM-VTON
+- Older approach
 
 ---
 
-### 7. DCI-VTON (Open Source) ✅ COMMERCIAL-FRIENDLY
-**Type**: Self-hosted virtual try-on  
-**Source**: https://github.com/bcmi/DCI-VTON-Virtual-Try-On  
-**License**: **MIT License** ✅ (commercial use allowed!)  
-**Status**: ACM Multimedia 2023 paper
+## Paid API Options
 
-**Key Features**:
-- Diffusion-based with warping module
-- VITON-HD dataset
-- Appearance flow guidance
+### 1. **Fashn.ai** ⭐ TOP PICK (Paid)
+- **Quality:** Excellent - industry-leading
+- **Pricing:**
+  - Via fal.ai API: **$0.075 per image**
+  - **1,000 images = $75**
+  - Direct API: $0.10/credit (unclear credits per image)
+- **Features:**
+  - Product to Model
+  - Virtual Try-On
+  - Model Swap
+  - 4K upscaling
+  - AI model creation
+- **Setup:** Simple REST API
+- **Support:** Good documentation, active support
 
-**Requirements**:
-- PF-AFN warping module
-- Paint-by-Example pretrained weights
-- CUDA-capable GPU
+**Pros:**
+- Zero infrastructure management
+- Consistent quality
+- Fast (seconds per image)
+- Scales automatically
+- Good for women 40-65 demographic
 
-**Cost Analysis**:
-- Self-hosted GPU costs
-- **Per 1000 images**: $XX (TBD - depends on inference speed)
-
-**Pros**:
-- **MIT LICENSE - COMMERCIAL USE ALLOWED!** ✅
-- Full control over deployment
-- No per-image API fees
-- Diffusion-based quality
-
-**Cons**:
-- Older (2023) - quality may lag behind 2024+ models
-- More complex setup (warping + diffusion)
-- GPU infrastructure required
-- Unknown inference speed
-
-**Quality**: Unknown - need to test
-
-**🚨 CRITICAL**: This is the ONLY commercially-viable open-source VTON model found so far!
+**Cons:**
+- Cost adds up at scale (but still cheapest paid option)
+- Ongoing monthly cost
 
 ---
 
-### 8. FLUX 2 Dev (Open Source)
-**Status**: RESEARCHING - Not a VTON model, but could be used with CatVTON adapter...
+### 2. **Botika.io**
+- **Quality:** Very good - fashion-specific models
+- **Pricing:**
+  - **1 credit = 1 photo**
+  - Pro plan: $35/month for 30 credits
+  - **Effective cost: $1.17 per image**
+  - **1,000 images = $1,170**
+- **Features:**
+  - 50+ AI models
+  - Multiple backgrounds
+  - 4K resolution
+  - White-glove quality control (human review)
+  - Flat lay support
+- **Turnaround:** ~15 minutes + optional human review
 
-### 7. VModel.ai (Paid API)
-**Status**: RESEARCHING...
+**Pros:**
+- Human QA available
+- Fashion-specific training
+- Good model variety
+- Flat lay support
 
-### 8. Vue.ai
-**Status**: RESEARCHING...
-
-### 9. Photoroom API
-**Status**: RESEARCHING...
-
-### 10. Pixelcut API
-**Status**: RESEARCHING...
-
----
-
----
-
-## CRITICAL FINDINGS 🚨
-
-### Licensing Reality Check
-
-**ALL major open-source VTON models use non-commercial licenses:**
-- ❌ IDM-VTON (CC BY-NC-SA 4.0)
-- ❌ CatVTON (CC BY-NC-SA 4.0)
-- ❌ OOTDiffusion (Non-commercial)
-- ❌ StableVITON (Non-commercial)
-- ❌ VITON-HD, HR-VITON (Non-commercial)
-
-**Source**: [Fashn.ai blog: "So You Want to Build a Virtual Try-On App?"](https://fashn.ai/blog/so-you-want-to-build-a-virtual-try-on-app-a-developers-guide-to-not-getting)
-
-### ONLY Commercial-Friendly Open Source Option
-
-**DCI-VTON** - MIT License ✅
-- **Status**: ACM Multimedia 2023 (older, 2023 vs 2024/2025 models)
-- **Quality**: Unknown compared to newer models
-- **Complexity**: Requires PF-AFN warping module + diffusion model
-- **Cost**: Self-hosted GPU ($0.30-0.70/hour rental)
+**Cons:**
+- **Very expensive** ($1.17 vs $0.075 for Fashn)
+- 15.6x more expensive than Fashn.ai
+- Not viable for thousands of products
 
 ---
 
-## COMPARISON TABLE (Commercial Options Only)
-
-| Solution | Type | Cost/1000 Images | Speed | Quality | Ease of Use | License |
-|----------|------|------------------|-------|---------|-------------|---------|
-| **Fashn.ai** | Cloud API | **$40-75** | 5-17s | ⭐⭐⭐⭐⭐ | Easy (API) | Commercial ✅ |
-| **DCI-VTON** | Self-hosted | **$XX TBD** | Unknown | **⭐⭐⭐ Unknown** | Complex | MIT ✅ |
-| **Botika.io** | SaaS | **$1,100-1,330** | 15min+QC | ⭐⭐⭐⭐⭐ (with QC) | Easy (App) | Commercial ✅ |
-| VModel.ai | Cloud API | TBD | TBD | TBD | TBD | TBD |
-| Vue.ai | - | TBD | TBD | TBD | TBD | TBD |
-| Photoroom | - | TBD | TBD | TBD | TBD | TBD |
-| Pixelcut | - | TBD | TBD | TBD | TBD | TBD |
+### 3. **Revery.ai**
+- **Status:** Website down / rebranding
+- **Pricing:** Unknown (likely enterprise-only)
+- ❌ Not viable for evaluation
 
 ---
 
-## PRELIMINARY RECOMMENDATION
-
-### 🥇 Winner: Fashn.ai API
-
-**Reasons:**
-1. **Proven quality**: Compared favorably against all open-source models in independent testing
-2. **Commercial license**: No legal risks
-3. **Best cost/quality ratio**: $40-75/1000 images (with volume discount potential)
-4. **Fast**: 5-17 seconds per image
-5. **Zero infrastructure**: No GPU management, no setup complexity
-6. **Production-ready**: API, documentation, support
-
-**Cost Analysis:**
-- 10,000 products @ $0.075/image = $750
-- With volume discount (~$0.04): $400
-- **Much cheaper than hiring photographers or using Botika.io**
-
-### 🥈 Runner-up: DCI-VTON (Self-Hosted)
-
-**Only if:**
-- You need absolute lowest cost at massive scale (100k+ images)
-- You have GPU infrastructure already
-- You're willing to accept 2023-era quality
-- You can handle setup/maintenance complexity
-
-**Estimated costs:**
-- GPU rental: ~$0.40/hour
-- Inference speed: Unknown (need to test)
-- Infrastructure overhead: DevOps time
-
-**Risk**: Quality may be significantly lower than Fashn.ai
+### 4. **Vue.ai**
+- **Status:** Enterprise-only (no public pricing)
+- **Focus:** Full e-commerce personalization suite (beyond virtual try-on)
+- ❌ Overkill for this use case
 
 ---
 
-## NEXT STEPS
-
-### Option A: Go with Fashn.ai (Recommended)
-1. ✅ Sign up for free trial (10 credits)
-2. ✅ Test with sample AliExpress products
-3. ✅ Evaluate quality for women 40-65 demographic
-4. ✅ Negotiate volume pricing
-5. ✅ Build integration
-
-### Option B: Test DCI-VTON First
-1. Set up DCI-VTON locally/on GPU instance
-2. Test quality vs Fashn.ai
-3. Measure actual inference speed & cost
-4. Compare total cost of ownership
-5. Make decision based on data
-
-### Remaining Research:
-- VModel.ai, Vue.ai, Photoroom, Pixelcut pricing/quality
-- (Likely not competitive with Fashn.ai based on market positioning)
+### 5. **Zalando FEIDEGGER**
+- **Status:** Internal tool (not public API)
+- ❌ Not accessible
 
 ---
 
-## RECOMMENDATION TO REECE
+## Cost Comparison (1,000 Images)
 
-**Go with Fashn.ai** for the following reasons:
-
-1. **Legal safety**: Commercial license, no lawsuit risk
-2. **Quality**: Industry-leading, tested against all alternatives
-3. **Speed to market**: Start generating images today
-4. **Cost-effective**: $40-75/1000 images is reasonable for professional e-commerce photos
-5. **Scalability**: API handles batch processing
-6. **Model diversity**: Check if they support women 40-65 demographic (likely yes)
-
-**Alternative**: If you're processing 100k+ products and cost becomes prohibitive, we can revisit DCI-VTON self-hosting at that scale.
-
-**Budget requirement**: 
-- Free trial to start
-- ~$100 for first 1,000-2,000 test images
-- Volume pricing negotiation for larger scale
+| Solution | Cost per 1k images | Quality | Setup | Maintenance |
+|----------|-------------------|---------|-------|-------------|
+| **CatVTON** | **~$10-20** (compute) | ⭐⭐⭐⭐ | Medium | Self-hosted |
+| **IDM-VTON** | ~$15-30 (compute) | ⭐⭐⭐⭐⭐ | Medium-Hard | Self-hosted |
+| **Fashn.ai** | **$75** | ⭐⭐⭐⭐⭐ | Easy | None |
+| **Botika** | $1,170 | ⭐⭐⭐⭐ | Easy | None |
 
 ---
 
-*Research complete for commercial-viable options. Ready to build integration.*
+## Recommendations by Priority
+
+### **Priority: Cost Efficiency**
+→ **CatVTON (open source)**
+- $10-20 per 1,000 images (GPU compute only)
+- Great quality
+- One-time setup, then runs forever
+
+**Setup:**
+- Rent GPU instance (RunPod/Vast.ai: $0.30-0.50/hr)
+- Or use local GPU if available
+- 1,000 images ≈ 5-10 GPU hours = $2-5
+
+---
+
+### **Priority: Quality + Reasonable Cost**
+→ **Fashn.ai API**
+- $75 per 1,000 images
+- Zero infrastructure
+- Consistent results
+- Fast turnaround
+- Best paid option
+
+---
+
+### **Priority: Maximum Quality + Budget OK**
+→ **IDM-VTON (open source)**
+- Slight quality edge over CatVTON
+- Best for detail-critical products
+- Similar cost to CatVTON (~$15-30/1k)
+
+---
+
+## Testing Plan
+
+### Phase 1: Quick Feasibility Test
+Test with 5-10 sample products:
+
+1. **CatVTON** (open source)
+   - Deploy on RunPod ($0.50/hr GPU)
+   - Test with flat lay + model photos
+   - Measure: quality, speed, VRAM usage
+
+2. **Fashn.ai API** (paid)
+   - Sign up for free trial (10 credits)
+   - Test same products
+   - Measure: quality, API ease of use
+
+3. **IDM-VTON** (open source - if time allows)
+   - Same test as CatVTON
+   - Compare detail preservation
+
+### Phase 2: Quality Comparison
+- Generate side-by-side comparisons
+- Evaluate for women 40-65 demographic
+- Check fabric detail accuracy
+- Test with various product types (cardigans, tops, dresses)
+
+### Phase 3: Cost-Benefit Analysis
+- Calculate total cost for 1,000 and 10,000 products
+- Factor in setup time, maintenance, reliability
+- Make final recommendation
+
+---
+
+## Next Steps
+
+1. ✅ Research complete
+2. ⏳ Deploy CatVTON test instance
+3. ⏳ Sign up for Fashn.ai trial
+4. ⏳ Run test batch (5-10 products)
+5. ⏳ Generate comparison report with sample outputs
+6. ⏳ Final recommendation with cost breakdown
+
+---
+
+## Timeline Estimate
+
+- **Research:** ✅ Complete (30 min)
+- **Setup & Testing:** 2-3 hours
+- **Comparison Report:** 30 min
+- **Total:** ~3-4 hours
+
+---
+
+## Questions for You
+
+1. Do you have GPU access locally? (Will affect whether we test open source options)
+2. What's your monthly product volume? (Affects cost calculations)
+3. Would you prefer:
+   - a) Lower cost, self-hosted (CatVTON)
+   - b) Higher cost, zero maintenance (Fashn.ai)
+   - c) Test both and decide?
+
+---
+
+**Status:** Ready to begin testing phase

@@ -1,0 +1,61 @@
+{
+  "working": [],
+  "failed": [
+    {
+      "name": "elegant_standing_08.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "mature_elegant_10.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "mature_professional_03.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "model_portrait_06.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "professional_model_09.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "professional_woman_02.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "woman_professional_07.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "woman_standing_portrait_01.jpg",
+      "error": "Failed to detect body pose in model image."
+    }
+  ],
+  "errors": [
+    {
+      "name": "elegant_professional_05.jpg",
+      "status": "timeout",
+      "info": "86891cdd-cfb3-43c9-a99a-c31010e9179c"
+    },
+    {
+      "name": "elegant_woman_fullbody_01.jpg",
+      "status": "timeout",
+      "info": "a3da5b37-201f-4088-a10a-90b886a921fb"
+    },
+    {
+      "name": "mature_woman_professional_01.jpg",
+      "status": "timeout",
+      "info": "732e76ee-9be6-40b6-b63d-1a3eb463057b"
+    },
+    {
+      "name": "standing_woman_04.jpg",
+      "status": "timeout",
+      "info": "026edc44-2585-4f56-9768-29b1b3c12c84"
+    }
+  ],
+  "tested_at": "2026-01-28 23:28:08",
+  "total_tested": 12
+}

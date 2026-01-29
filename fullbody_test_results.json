@@ -1,0 +1,65 @@
+{
+  "working": [],
+  "failed": [
+    {
+      "name": "fullbody_athletic_01.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_athletic_02.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_catalog_01.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_catalog_02.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "fullbody_fashion_01.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_fashion_02.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_fashion_03.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "fullbody_fashion_04.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "fullbody_fashion_05.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "fullbody_fashion_06.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "fullbody_professional_01.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "fullbody_professional_02.jpg",
+      "error": "Failed to detect body pose in model image."
+    },
+    {
+      "name": "mature_fullbody_01.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "mature_fullbody_02.jpg",
+      "error": "Timeout"
+    },
+    {
+      "name": "mature_fullbody_03.jpg",
+      "error": "Failed to detect body pose in model image."
+    }
+  ]
+}
