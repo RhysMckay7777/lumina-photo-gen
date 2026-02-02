@@ -101,35 +101,38 @@ REQUIREMENTS:
             
             demo = self.load_demographics().get(demographic, self.load_demographics()["women-50-60"])
             
-            # Enhanced prompt for image reference
-            prompt = f"""Professional fashion catalog photography - Use the provided product image as your exact visual reference.
+            # Enhanced prompt for exact product matching
+            prompt = f"""CRITICAL INSTRUCTION: Generate a professional catalog photo of a model wearing/using the EXACT product shown in the reference image.
 
-PRODUCT IMAGE PROVIDED: Match this EXACTLY - color, pattern, texture, all details.
+PRODUCT REFERENCE IMAGE PROVIDED - YOU MUST:
+1. Copy the EXACT colors, patterns, textures, design details from the reference
+2. The product must be IDENTICAL to the reference - same style, same features, same everything
+3. Only change: put it on a professional model in a studio setting
 
-MODEL: {demo['description']}, {demo['hair']}, warm natural smile
+MODEL WEARING THE PRODUCT:
+- {demo['description']}, {demo['hair']}
+- Professional, natural expression
+- Full body shot showing the complete product clearly
+- Standing naturally, facing camera
 
-POSE & FRAMING:
-- Full body shot, generous space around model
-- Relaxed confident stance, weight on one leg
-- Arms naturally at sides, shoulders relaxed
-- Looking at camera warmly
-- Natural comfortable body language
+STUDIO SETUP:
+- Clean white seamless background
+- Professional studio lighting
+- High-end fashion catalog quality
 
-COMPOSITION:
-- Wide framing, model 60-70% of frame height
-- Plenty of breathing room
-- Slightly off-center positioning
-- Airy spacious feel
+THE PRODUCT MUST BE PIXEL-PERFECT MATCH TO REFERENCE:
+- Exact same colors (do not change hues)
+- Exact same patterns/textures  
+- Exact same design/style/details
+- Only difference: it's being worn/used by the model
 
-BACKGROUND: Pure white seamless studio backdrop
+FORBIDDEN:
+- Do NOT create a similar product
+- Do NOT change colors or design
+- Do NOT add or remove features
+- The product MUST be identical to the reference
 
-LIGHTING: Professional studio lighting, soft and even
-
-CLOTHING: EXACT match to reference image - same color, pattern, texture, style
-
-TECHNICAL: Ultra-high resolution, sharp focus, natural proportions, photorealistic, professional catalog quality
-
-CRITICAL: Match the provided product image exactly."""
+OUTPUT: Professional catalog photo, model wearing/using the EXACT product from reference image."""
             
             try:
                 # Download product image
