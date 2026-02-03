@@ -1,6 +1,26 @@
-google-genai>=0.2.0
-anthropic>=0.39.0
-httpx>=0.27.0
-requests>=2.31.0
-python-dotenv>=1.0.0
-Pillow>=10.0.0
+# Python dependencies for Lumina Photo Enhancer
+# Run: pip install -r requirements.txt
+
+# Core Web Framework
+fastapi
+uvicorn[standard]
+pydantic
+
+# HTTP client
+httpx
+
+# Google Gemini AI
+google-genai
+
+# Async HTTP (for GenAI SDK)
+aiohttp
+
+# Settings
+python-dotenv
+
+# File handling
+aiofiles
+python-multipart
+
+# WebSocket support (included in uvicorn[standard])
+websockets

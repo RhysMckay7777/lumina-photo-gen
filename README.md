@@ -1,236 +1,93 @@
-# 🔥 Lumina Photo Gen
-**AI Model Photo Generator for Shopify Dropshipping**
+# Lumina Photo Enhancer
 
-Generate professional AI model photos for your Shopify products using Gemini with product image references.
+AI-powered Shopify product image enhancement using Gemini 2.5 Flash.
 
-## ✨ Features
+## Features
 
-- ✅ **Zero Cost** - Uses free Gemini API (no paid services)
-- ✅ **Perfect Quality** - Professional fashion photography with accurate product representation
-- ✅ **Product Image Reference** - Uses YOUR actual product images (not text descriptions)
-- ✅ **Natural Proportions** - No distortion, realistic human dimensions
-- ✅ **Target Demographics** - Women 40-65 (customizable)
-- ✅ **Batch Processing** - Process multiple products at once
-- ✅ **Web UI** - Easy point-and-click interface
-- ✅ **Auto Upload** - Direct Shopify integration
+- 🔗 Connect to any Shopify store via GraphQL API
+- 🖼️ Enhance product images with AI-generated model photos
+- ⚡ Parallel processing with 10+ Gemini API keys (150+ images/min)
+- 🏷️ Automatic "ai-enhanced" tagging
+- 📊 Real-time progress tracking via WebSocket
 
-## 🎯 Results
-
-**Input:** Product flat-lay image  
-**Output:** Professional model photo wearing EXACT product
-
-**Quality:** Magazine-level fashion photography  
-**Speed:** ~10 seconds per image  
-**Cost:** $0 per image
-
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dependencies
 
 ```bash
-cd lumina-photo-gen
-pip3 install flask google-genai requests
+pip install -r requirements.txt
 ```
 
 ### 2. Set Environment Variables
 
 ```bash
+# Copy example and edit
 cp .env.example .env
-# Edit .env with your credentials
+
+# Add your Gemini API keys (10 recommended for speed)
+GEMINI_API_KEY_1=xxx
+GEMINI_API_KEY_2=xxx
+# ... up to 10
 ```
 
-Required:
-- `SHOPIFY_STORE` - Your Shopify store URL
-- `SHOPIFY_TOKEN` - Admin API access token (shpat_...)
-- `GEMINI_API_KEY` - Google Gemini API key
-
-### 3. Start Web UI
+### 3. Run Locally
 
 ```bash
-python3 app.py
+# Start the server
+python server.py
+
+# Open http://localhost:8000/app in browser
 ```
 
-Open: http://localhost:5002
+## Deployment
 
-## 📱 Usage
+### Backend (Render)
 
-### Web Interface (Recommended)
+1. Create new Web Service on [Render](https://render.com)
+2. Connect your GitHub repo
+3. Set environment variables (all 10 Gemini keys)
+4. Deploy with `starter` plan (512MB) - upgrade if needed
 
-1. Open http://localhost:5002
-2. Select products from your catalog
-3. Choose demographics (women 40-50, 50-60, 60-65)
-4. Click "Generate AI Model Photos"
-5. Images auto-upload to Shopify
+### Frontend (Vercel)
 
-### Command Line
+1. Import project on [Vercel](https://vercel.com)
+2. It will auto-detect the `vercel.json` config
+3. Deploy
+4. Update `API_BASE_URL` in `frontend/app.js` with your Render URL
 
-```bash
-# List all products
-python3 pipeline.py --store your-store.myshopify.com --token shpat_... --list
+## API Endpoints
 
-# Generate for one product
-python3 pipeline.py \
-  --store your-store.myshopify.com \
-  --token shpat_... \
-  --product-id 123456789 \
-  --demographics women-50-60
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Health check |
+| `/api/connect` | POST | Validate Shopify connection |
+| `/api/products` | POST | List products from store |
+| `/api/enhance` | POST | Start enhancement job |
+| `/api/status/{job_id}` | GET | Get job progress |
+| `/api/stop/{job_id}` | POST | Stop running job |
+| `/ws/progress/{job_id}` | WS | Real-time progress |
 
-# Preview only (don't upload)
-python3 pipeline.py \
-  --store your-store.myshopify.com \
-  --token shpat_... \
-  --product-id 123456789 \
-  --no-upload
-```
+## Performance
 
-## 🎨 How It Works
+With 10 Gemini API keys:
+- **Theoretical max**: 150 images/minute
+- **3000 products**: ~20-25 minutes
 
-### Technology: Gemini 2.5 Flash Image with Visual References
-
-1. **Pull Product** from Shopify (title, description, image URL)
-2. **Generate AI Model Photo** using Gemini:
-   - Feeds product image as visual reference
-   - Generates model wearing EXACT product
-   - Natural proportions, professional quality
-3. **Upload to Shopify** as additional product image
-
-### Why This Approach?
-
-We tested multiple solutions:
-- ❌ Text-based generation: Products not accurate enough
-- ❌ IDM-VTON: Distorted proportions, stretched bodies
-- ❌ Fashn.ai: $75 per 1,000 images
-- ✅ **Gemini with image reference**: Perfect quality + $0 cost
-
-## 📊 Cost Comparison
-
-| Solution | Cost per 1k images | Quality | Product Accuracy |
-|----------|-------------------|---------|------------------|
-| **Gemini (This)** | **$0** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| IDM-VTON | $23 | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| Fashn.ai | $75 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| Botika | $1,170 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-
-## 🛠️ Architecture
-
-```
-┌─────────────────┐
-│  Shopify Store  │
-└────────┬────────┘
-         │
-    ┌────▼────┐
-    │ Web UI  │ (Flask)
-    └────┬────┘
-         │
-    ┌────▼──────────┐
-    │  Pipeline.py  │
-    └───┬─────┬─────┘
-        │     │
-┌───────▼──┐  │
-│ Shopify  │  │
-│ Client   │  │
-└──────────┘  │
-         ┌────▼─────────────┐
-         │  Generator.py    │
-         │ (Gemini + Image  │
-         │    Reference)    │
-         └──────────────────┘
-```
-
-## 📁 Project Structure
+## Files
 
 ```
 lumina-photo-gen/
-├── app.py                  # Flask web server
-├── pipeline.py             # Main processing pipeline
-├── generator.py            # AI image generation (Gemini)
-├── shopify_client.py       # Shopify API integration
-├── hybrid_generator.py     # Legacy VTON approach (not used)
-├── gemini_image_ref.py     # Standalone Gemini test
-├── test_comprehensive.py   # Full system test suite
-├── templates/
-│   └── index.html         # Web interface
-├── README.md              # This file
-├── .env.example           # Environment template
-└── .gitignore            # Git ignore rules
+├── server.py              # FastAPI server
+├── photo_enhancer.py      # Main orchestrator
+├── parallel_gemini.py     # Multi-key Gemini processor
+├── shopify_graphql.py     # Shopify GraphQL client
+├── shopify_queries.py     # GraphQL queries
+├── shopify_mutations.py   # GraphQL mutations
+├── frontend/
+│   ├── index.html         # Web UI
+│   ├── styles.css         # Styling
+│   └── app.js             # Frontend logic
+├── render.yaml            # Render deployment config
+├── vercel.json            # Vercel deployment config
+└── requirements.txt       # Python dependencies
 ```
-
-## 🧪 Testing
-
-Run comprehensive test suite:
-
-```bash
-python3 test_comprehensive.py
-```
-
-Tests:
-- ✅ Shopify product fetching
-- ✅ Image generation for multiple products
-- ✅ All demographics (40-50, 50-60, 60-65)
-- ✅ Shopify upload functionality
-- ✅ Quality checks (file size, corruption)
-
-## 🎯 Demographics
-
-- `women-40-50` - Women 40-50 years old
-- `women-50-60` - Women 50-60 years old (default)
-- `women-60-65` - Women 60-65 years old
-
-Easily customizable in `generator.py`
-
-## 🔒 Security
-
-- Never commit `.env` or tokens to git
-- Use `.env.example` as template
-- Shopify tokens should have minimal permissions
-- Keep Gemini API key private
-
-## 🐛 Troubleshooting
-
-### "GEMINI_API_KEY not set"
-Get your API key from: https://aistudio.google.com/apikey
-
-### "Invalid Shopify token"
-Make sure you're using an **Admin API access token** (starts with `shpat_`), not a Storefront token.
-
-### "Failed to generate image"
-Check Gemini API quota. Free tier has rate limits.
-
-### Images not uploading to Shopify
-Verify your Shopify token has `write_products` permission.
-
-## 📈 Performance
-
-- **Generation time:** ~10 seconds per image
-- **Quality:** Professional fashion catalog level
-- **Accuracy:** Product details match 95%+
-- **Proportions:** Natural, realistic human dimensions
-
-## 🚧 Roadmap
-
-- [ ] More demographics (men, younger women)
-- [ ] Custom backgrounds (lifestyle vs studio)
-- [ ] Multiple poses per product
-- [ ] Batch CSV upload
-- [ ] A/B testing framework
-- [ ] Analytics integration
-
-## 📝 License
-
-Built for Lumina Web3 by Clawd
-
-## 🤝 Credits
-
-- **AI Generation:** Google Gemini 2.5 Flash Image
-- **Virtual Try-On Research:** IDM-VTON, CatVTON, OOTDiffusion (tested but not used)
-- **E-commerce:** Shopify API
-
-## 📮 Support
-
-Questions? Issues? Contact: rhys@luminaweb3.io
-
----
-
-**Status:** ✅ Production Ready  
-**Last Updated:** 2026-01-29  
-**Version:** 1.0.0

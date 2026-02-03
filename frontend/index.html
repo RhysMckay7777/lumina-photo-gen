@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Photo Enhancer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>Lumina Photo Enhancer</h1>
+            </div>
+            <p class="tagline">AI-Powered Shopify Product Image Enhancement</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Step 1: Connect Store -->
+            <section id="connect-section" class="card">
+                <div class="card-header">
+                    <span class="step-badge">1</span>
+                    <h2>Connect Your Shopify Store</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="store-url">Store URL</label>
+                        <input type="text" id="store-url" placeholder="your-store.myshopify.com" />
+                    </div>
+                    <div class="form-group">
+                        <label for="access-token">Access Token</label>
+                        <input type="password" id="access-token" placeholder="shpat_xxxxxxxxxxxx" />
+                        <small>Get this from your Shopify Admin → Apps → Develop apps</small>
+                    </div>
+                    <button id="connect-btn" class="btn btn-primary">
+                        <span class="btn-text">Connect Store</span>
+                        <span class="btn-loader hidden">⏳</span>
+                    </button>
+                    <div id="connect-error" class="error-message hidden"></div>
+                </div>
+            </section>
+
+            <!-- Step 2: Store Info (shown after connection) -->
+            <section id="store-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge success">✓</span>
+                    <h2>Store Connected</h2>
+                </div>
+                <div class="card-body">
+                    <div class="store-info">
+                        <div class="info-item">
+                            <span class="label">Store Name</span>
+                            <span id="shop-name" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Domain</span>
+                            <span id="shop-domain" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Total Products</span>
+                            <span id="product-count" class="value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">To Enhance</span>
+                            <span id="to-enhance-count" class="value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Products Preview -->
+            <section id="products-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge">2</span>
+                    <h2>Products Preview</h2>
+                    <button id="refresh-products" class="btn btn-small">↻ Refresh</button>
+                </div>
+                <div class="card-body">
+                    <div id="products-grid" class="products-grid">
+                        <!-- Products will be loaded here -->
+                    </div>
+                    <div id="products-loading" class="loading hidden">Loading products...</div>
+                </div>
+            </section>
+
+            <!-- Step 4: Enhancement Controls -->
+            <section id="enhance-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge">3</span>
+                    <h2>Start Enhancement</h2>
+                </div>
+                <div class="card-body">
+                    <div class="options">
+                        <div class="option">
+                            <label>
+                                <input type="checkbox" id="skip-enhanced" checked />
+                                Skip already enhanced products
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="checkbox" id="delete-old" checked />
+                                Replace original images
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label for="max-products">Max Products (optional)</label>
+                            <input type="number" id="max-products" placeholder="All" min="1" />
+                        </div>
+                    </div>
+                    <button id="start-btn" class="btn btn-primary btn-large">
+                        🚀 Start Enhancement
+                    </button>
+                </div>
+            </section>
+
+            <!-- Progress Section (shown during enhancement) -->
+            <section id="progress-section" class="card hidden">
+                <div class="card-header">
+                    <h2>Enhancement Progress</h2>
+                    <span id="progress-status" class="status-badge">Running</span>
+                </div>
+                <div class="card-body">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span id="progress-text">0%</span>
+                            <span id="progress-count">0 / 0 products</span>
+                        </div>
+                    </div>
+                    <div class="current-product">
+                        <span class="label">Current:</span>
+                        <span id="current-product-title">-</span>
+                    </div>
+                    <div class="eta">
+                        <span class="label">ETA:</span>
+                        <span id="eta-text">Calculating...</span>
+                    </div>
+                    <button id="stop-btn" class="btn btn-danger">
+                        ⏹ Stop Enhancement
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="card hidden">
+                <div class="card-header">
+                    <h2>Enhancement Complete</h2>
+                    <span id="results-status" class="status-badge success">✓</span>
+                </div>
+                <div class="card-body">
+                    <div class="results-summary">
+                        <div class="result-item success">
+                            <span class="number" id="result-success">0</span>
+                            <span class="label">Successful</span>
+                        </div>
+                        <div class="result-item error">
+                            <span class="number" id="result-failed">0</span>
+                            <span class="label">Failed</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="number" id="result-images">0</span>
+                            <span class="label">Images Enhanced</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="number" id="result-time">0</span>
+                            <span class="label">Minutes</span>
+                        </div>
+                    </div>
+                    <button id="restart-btn" class="btn btn-primary">
+                        ↻ Start New Enhancement
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by Gemini 2.5 Flash AI</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# Render Deployment Configuration
+# https://render.com/docs/yaml-spec
+
+services:
+  - type: web
+    name: lumina-photo-enhancer
+    runtime: python
+    plan: starter  # 512MB RAM - upgrade to standard (2GB) if needed
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      # Gemini API Keys (add via Render dashboard)
+      - key: GEMINI_API_KEY_1
+        sync: false
+      - key: GEMINI_API_KEY_2
+        sync: false
+      - key: GEMINI_API_KEY_3
+        sync: false
+      - key: GEMINI_API_KEY_4
+        sync: false
+      - key: GEMINI_API_KEY_5
+        sync: false
+      - key: GEMINI_API_KEY_6
+        sync: false
+      - key: GEMINI_API_KEY_7
+        sync: false
+      - key: GEMINI_API_KEY_8
+        sync: false
+      - key: GEMINI_API_KEY_9
+        sync: false
+      - key: GEMINI_API_KEY_10
+        sync: false
+      # Frontend URL (update after Vercel deployment)
+      - key: FRONTEND_URL
+        sync: false
+    autoDeploy: true
+    healthCheckPath: /api/health
